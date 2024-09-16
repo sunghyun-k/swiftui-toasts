@@ -34,11 +34,14 @@ internal struct ToastInteractingView: View {
   private var dragGesture: some Gesture {
     DragGesture(minimumDistance: 0)
       .updating($yOffset) { value, state, _ in
-        state = value.translation.height
+        let translation = value.translation.height
+        let isTopPosition = manager.position == .top
+        let shouldReduceTranslation = (isTopPosition && translation > 0) || (!isTopPosition && translation < 0)
+        state = shouldReduceTranslation ? translation * 0.5 : translation
       }
       .onEnded { value in
         let threshold: CGFloat = 48 / 2
-        let draggedAmount: CGFloat = manager.position == .top ? -value.translation.height : value.translation.height
+        let draggedAmount = manager.position == .top ? -value.translation.height : value.translation.height
         if draggedAmount > threshold {
           manager.remove(model)
         } else {
