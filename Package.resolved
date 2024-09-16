@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "swiftui-window-overlay",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sunghyun-k/swiftui-window-overlay.git",
+      "state" : {
+        "revision" : "fb292c878923bd4d2811ab9605992aa10b45b07a",
+        "version" : "1.0.0"
+      }
+    }
+  ],
+  "version" : 2
+}
