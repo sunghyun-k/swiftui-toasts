@@ -3,6 +3,7 @@ import SwiftUI
 @MainActor
 internal final class ToastManager: ObservableObject {
 
+  @Published internal var position: ToastPosition = .top
   internal var duration: Double = 3.0
   @Published internal private(set) var toasts: [ToastModel] = []
   @Published internal private(set) var isAppeared = false

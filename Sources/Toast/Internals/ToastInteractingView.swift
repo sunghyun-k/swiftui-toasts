@@ -37,7 +37,9 @@ internal struct ToastInteractingView: View {
         state = value.translation.height
       }
       .onEnded { value in
-        if value.translation.height > 48/2 {
+        let threshold: CGFloat = 48 / 2
+        let draggedAmount: CGFloat = manager.position == .top ? -value.translation.height : value.translation.height
+        if draggedAmount > threshold {
           manager.remove(model)
         } else {
           startDismissTask()
