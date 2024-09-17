@@ -3,23 +3,33 @@ import Foundation
 import struct SwiftUI.Image
 import struct SwiftUI.Color
 
-public struct ToastModel: Identifiable, Equatable {
-  public let id = UUID()
+public struct ToastValue {
   internal var icon: Image?
   internal var message: String
   internal var button: ToastButton?
+  internal var duration: TimeInterval?
   public init(
     icon: Image? = nil,
     message: String,
-    button: ToastButton? = nil
+    button: ToastButton? = nil,
+    duration: TimeInterval = 3.0
   ) {
     self.icon = icon
     self.message = message
     self.button = button
+    self.duration = min(max(0, duration), 10)
   }
-
-  public static func ==(lhs: ToastModel, rhs: ToastModel) -> Bool {
-    return lhs.id == rhs.id
+  @_disfavoredOverload
+  internal init(
+    icon: Image? = nil,
+    message: String,
+    button: ToastButton? = nil,
+    duration: TimeInterval? = nil
+  ) {
+    self.icon = icon
+    self.message = message
+    self.button = button
+    self.duration = duration
   }
 }
 

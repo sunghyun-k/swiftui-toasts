@@ -2,7 +2,7 @@ import SwiftUI
 
 internal struct ToastInteractingView: View {
 
-  var model: ToastModel
+  @ObservedObject var model: ToastModel
   let manager: ToastManager
   @GestureState private var yOffset: CGFloat?
   @State private var dismissTask: Task<Void, any Error>?
@@ -11,13 +11,13 @@ internal struct ToastInteractingView: View {
 
   var body: some View {
     main
-      .onChange(of: isDragging) { newValue in
+      ._onChange(of: isDragging) { _, newValue in
         if newValue {
           dismissTask?.cancel()
           dismissTask = nil
         }
       }
-      .onAppear {
+      ._onChange(of: model.duration == nil, initial: true) { _, newValue in
         startDismissTask()
       }
   }
@@ -35,11 +35,16 @@ internal struct ToastInteractingView: View {
     DragGesture(minimumDistance: 0)
       .updating($yOffset) { value, state, _ in
         let translation = value.translation.height
-        let isTopPosition = manager.position == .top
-        let shouldReduceTranslation = (isTopPosition && translation > 0) || (!isTopPosition && translation < 0)
-        state = shouldReduceTranslation ? translation * 0.5 : translation
+        if model.duration == nil {
+          state = translation * 0.5
+        } else {
+          let isTopPosition = manager.position == .top
+          let shouldReduceTranslation = (isTopPosition && translation > 0) || (!isTopPosition && translation < 0)
+          state = shouldReduceTranslation ? translation * 0.5 : translation
+        }
       }
       .onEnded { value in
+        if model.duration == nil { return }
         let threshold: CGFloat = 48 / 2
         let draggedAmount = manager.position == .top ? -value.translation.height : value.translation.height
         if draggedAmount > threshold {
@@ -53,7 +58,7 @@ internal struct ToastInteractingView: View {
   private func startDismissTask() {
     dismissTask?.cancel()
     dismissTask = Task {
-      try await manager.startRemovalTask(for: model)
+      await manager.startRemovalTask(for: model)
     }
   }
 }

@@ -1,7 +1,7 @@
 import SwiftUI
 
 internal struct ToastView: View {
-  var model: ToastModel
+  @ObservedObject var model: ToastModel
   @Environment(\.colorScheme) private var colorScheme
 
   private var isDark: Bool { colorScheme == .dark }
@@ -61,38 +61,48 @@ internal struct ToastView: View {
 #Preview {
   let group = VStack {
     ToastView(
-      model: .init(
-        icon: Image(systemName: "info.circle"),
-        message: "This is a toast message",
-        button: .init(title: "Action", color: .red, action: {})
+      model: .init(value:
+          .init(
+            icon: Image(systemName: "info.circle"),
+            message: "This is a toast message",
+            button: .init(title: "Action", color: .red, action: {})
+          )
       )
     )
     ToastView(
-      model: .init(
-        icon: Image(systemName: "info.circle"),
-        message: "This is a toast message",
-        button: .init(title: "Action", action: {})
+      model: .init(value:
+          .init(
+            icon: Image(systemName: "info.circle"),
+            message: "This is a toast message",
+            button: .init(title: "Action", action: {})
+          )
       )
     )
     ToastView(
-      model: .init(
-        icon: Image(systemName: "info.circle"),
-        message: "This is a toast message",
-        button: nil
+      model: .init(value:
+          .init(
+            icon: Image(systemName: "info.circle"),
+            message: "This is a toast message",
+            button: nil
+          )
       )
     )
     ToastView(
-      model: .init(
-        icon: nil,
-        message: "This is a toast message",
-        button: nil
+      model: .init(value:
+          .init(
+            icon: nil,
+            message: "This is a toast message",
+            button: nil
+          )
       )
     )
     ToastView(
-      model: .init(
-        icon: nil,
-        message: "Copied",
-        button: nil
+      model: .init(value:
+          .init(
+            icon: nil,
+            message: "Copied",
+            button: nil
+          )
       )
     )
   }

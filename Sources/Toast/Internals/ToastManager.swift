@@ -4,13 +4,12 @@ import SwiftUI
 internal final class ToastManager: ObservableObject {
 
   @Published internal var position: ToastPosition = .top
-  internal var duration: Double = 3.0
-  @Published internal private(set) var toasts: [ToastModel] = []
+  @Published internal private(set) var models: [ToastModel] = []
   @Published internal private(set) var isAppeared = false
   private var dismissOverlayTask: Task<Void, any Error>?
 
   internal var isPresented: Bool {
-    !toasts.isEmpty || isAppeared
+    !models.isEmpty || isAppeared
   }
 
   nonisolated init() {}
@@ -19,17 +18,20 @@ internal final class ToastManager: ObservableObject {
     isAppeared = true
   }
 
-  internal func append(_ toast: ToastModel) {
+  @discardableResult
+  internal func append(_ toast: ToastValue) -> ToastModel {
     dismissOverlayTask?.cancel()
     dismissOverlayTask = nil
-    toasts.append(toast)
+    let model = ToastModel(value: toast)
+    models.append(model)
+    return model
   }
 
-  internal func remove(_ toast: ToastModel) {
-    if let index = self.toasts.firstIndex(of: toast) {
-      self.toasts.remove(at: index)
+  internal func remove(_ model: ToastModel) {
+    if let index = self.models.firstIndex(where: { $0 === model }) {
+      self.models.remove(at: index)
     }
-    if toasts.isEmpty {
+    if models.isEmpty {
       dismissOverlayTask = Task {
         try await Task.sleep(seconds: removalAnimationDuration)
         isAppeared = false
@@ -37,9 +39,30 @@ internal final class ToastManager: ObservableObject {
     }
   }
 
-  internal func startRemovalTask(for toast: ToastModel) async throws {
-    try await Task.sleep(seconds: duration)
-    remove(toast)
+  internal func startRemovalTask(for model: ToastModel) async {
+    if let duration = model.value.duration {
+      do {
+        try await Task.sleep(seconds: duration)
+        remove(model)
+      } catch {}
+    }
+  }
+
+  internal func append<V>(
+    message: String,
+    task: () async throws -> V,
+    onSuccess: (V) -> ToastValue,
+    onFailure: (any Error) -> ToastValue
+  ) async throws -> V {
+    let model = append(ToastValue(icon: Image(systemName: "circle"), message: message, duration: nil))
+    do {
+      let value = try await task()
+      model.value = onSuccess(value)
+      return value
+    } catch {
+      model.value = onFailure(error)
+      throw error
+    }
   }
 }
 

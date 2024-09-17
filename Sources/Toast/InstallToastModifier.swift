@@ -14,7 +14,7 @@ private struct InstallToastModifier: ViewModifier {
     content
       .environment(
         \.presentToast,
-        PresentToastAction(action: { manager.append($0) })
+        PresentToastAction(_manager: manager)
       )
       ._background {
         InstallToastView(manager: manager)

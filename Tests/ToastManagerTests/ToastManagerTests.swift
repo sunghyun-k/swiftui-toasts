@@ -40,7 +40,7 @@ final class ToastManagerTests: XCTestCase {
     let toast = ToastModel(message: "Test Message")
 
     manager.append(toast)
-    try await manager.startRemovalTask(for: toast)
+    await manager.startRemovalTask(for: toast)
 
     XCTAssertFalse(manager.toasts.contains(toast))
   }
