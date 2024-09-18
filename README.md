@@ -13,6 +13,7 @@ A toast notification library for SwiftUI.
 - Seamless integration with SwiftUI
 - Dark mode support
 - Slide gesture to dismiss
+- Loading state interface with async/await
 
 ## Usage
 
@@ -45,6 +46,24 @@ Button("Show Toast") {
   )
   presentToast(toast)
 }
+```
+
+## Advanced Usage
+
+```swift
+let toast = ToastModel(
+  message: "Loading...",
+  task: {
+    // Handle loading task
+    return "Success"
+  },
+  onSuccess: { result in
+    ToastValue(icon: Image(systemName: "checkmark.circle"), message: result)
+  },
+  onFailure: { error in
+    ToastValue(icon: Image(systemName: "xmark.circle"), message: error.localizedDescription)
+  }
+)
 ```
 
 ## Customization
