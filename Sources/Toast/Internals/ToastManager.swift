@@ -48,6 +48,7 @@ internal final class ToastManager: ObservableObject {
     }
   }
 
+  @discardableResult
   internal func append<V>(
     message: String,
     task: () async throws -> V,

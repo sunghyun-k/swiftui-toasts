@@ -1,66 +1,102 @@
 import XCTest
-@testable import Toast
+import SwiftUI
+@testable import Toasts
 
 @MainActor
 final class ToastManagerTests: XCTestCase {
   func testAppendToast() {
     let manager = ToastManager()
-    let toast = ToastModel(message: "Test Message")
-
-    manager.append(toast)
-
-    XCTAssertEqual(manager.toasts.count, 1)
-    XCTAssertEqual(manager.toasts.first, toast)
+    let toast = ToastValue(message: "Test Message")
+    
+    let model = manager.append(toast)
+    
+    XCTAssertEqual(manager.models.count, 1)
+    XCTAssertTrue(manager.models.contains(where: { $0 === model }))
+    XCTAssertEqual(model.message, "Test Message")
   }
-
+  
   func testRemoveToast() {
     let manager = ToastManager()
-    let toast = ToastModel(message: "Test Message")
-
-    manager.append(toast)
-    manager.remove(toast)
-
-    XCTAssertTrue(manager.toasts.isEmpty)
+    let toast = ToastValue(message: "Test Message")
+    let model = manager.append(toast)
+    
+    manager.remove(model)
+    
+    XCTAssertTrue(manager.models.isEmpty)
   }
-
+  
   func testIsPresented() {
     let manager = ToastManager()
-
+    
     XCTAssertFalse(manager.isPresented)
-
-    let toast = ToastModel(message: "Test Message")
+    
+    let toast = ToastValue(message: "Test Message")
     manager.append(toast)
-
+    
     XCTAssertTrue(manager.isPresented)
   }
-
-  func testStartRemovalTask() async throws {
+  
+  func testOnAppear() {
     let manager = ToastManager()
-    manager.duration = 0.1
-    let toast = ToastModel(message: "Test Message")
-
-    manager.append(toast)
-    await manager.startRemovalTask(for: toast)
-
-    XCTAssertFalse(manager.toasts.contains(toast))
+    
+    XCTAssertFalse(manager.isAppeared)
+    
+    manager.onAppear()
+    
+    XCTAssertTrue(manager.isAppeared)
+  }
+  
+  func testStartRemovalTask() async {
+    let manager = ToastManager()
+    let toast = ToastValue(message: "Test Message", duration: 0.1)
+    let model = manager.append(toast)
+    
+    await manager.startRemovalTask(for: model)
+    
+    XCTAssertTrue(manager.models.isEmpty)
+  }
+  
+  func testAppendWithTask() async throws {
+    let manager = ToastManager()
+    
+    let result = try await manager.append(
+      message: "Loading...",
+      task: {
+        try await Task.sleep(seconds: 0.1)
+        return "Success"
+      },
+      onSuccess: { result in
+        ToastValue(icon: Image(systemName: "checkmark.circle"), message: result)
+      },
+      onFailure: { error in
+        ToastValue(icon: Image(systemName: "xmark.circle"), message: error.localizedDescription)
+      }
+    )
+    
+    XCTAssertEqual(result, "Success")
+    XCTAssertEqual(manager.models.count, 1)
+    XCTAssertEqual(manager.models.first?.message, "Success")
   }
 
-  func testDismissOverlayTask() async throws {
+  func testAppendWithErrorTask() async throws {
     let manager = ToastManager()
-    manager.duration = 0.1
-    let toast = ToastModel(message: "Test Message")
 
-    manager.append(toast)
-    manager.onAppear()
-
-    XCTAssertTrue(manager.isAppeared)
-
-    manager.remove(toast)
-
-    XCTAssertTrue(manager.toasts.isEmpty)
-
-    try await Task.sleep(seconds: removalAnimationDuration + 0.1)
-
-    XCTAssertFalse(manager.isAppeared)
+    do {
+      try await manager.append(
+        message: "Loading...",
+        task: {
+          try await Task.sleep(seconds: 0.1)
+          throw NSError(domain: "", code: 0)
+        },
+        onSuccess: { result in
+          ToastValue(icon: Image(systemName: "checkmark.circle"), message: result)
+        },
+        onFailure: { error in
+          ToastValue(icon: Image(systemName: "xmark.circle"), message: "Error")
+        }
+      )
+    } catch {}
+    XCTAssertEqual(manager.models.count, 1)
+    XCTAssertEqual(manager.models.first?.message, "Error")
   }
 }
