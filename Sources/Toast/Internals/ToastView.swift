@@ -7,27 +7,44 @@ internal struct ToastView: View {
   private var isDark: Bool { colorScheme == .dark }
 
   var body: some View {
-    main
-      .frame(height: 48)
-      ._background {
-        Capsule()
-          .fill(Color.toastBackground)
-      }
-      .compositingGroup()
-      .shadow(color: .primary.opacity(isDark ? 0.0 : 0.1), radius: 16, y: 8.0)
+    ZStack(alignment: .trailing) {
+      Capsule()
+        .fill(Color.toastBackground)
+      main
+    }
+    .frame(height: 48)
+    .fixedSize(horizontal: true, vertical: false)
+    .compositingGroup()
+    .shadow(color: .primary.opacity(isDark ? 0.0 : 0.1), radius: 16, y: 8.0)
+    .frame(maxWidth: .infinity)
   }
 
   private var main: some View {
     HStack(spacing: 10) {
       if let icon = model.icon {
         icon
-          .frame(width: 18, height: 18)
+          .frame(width: 19, height: 19)
           .padding(.leading, 15)
       } else {
         Color.clear
           .frame(width: 14)
       }
       Text(model.message)
+        .transition(
+          .modifier(
+            active: TransformModifier(
+              yOffset: 0.0,
+              scale: 1.0,
+              opacity: -1.0
+            ),
+            identity: TransformModifier(
+              yOffset: 0.0,
+              scale: 1.0,
+              opacity: 1.0
+            )
+          )
+        )
+        .id(model.message)
       if let button = model.button {
         buttonView(button)
           .padding([.top, .bottom, .trailing], 10)

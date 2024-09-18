@@ -57,10 +57,14 @@ internal final class ToastManager: ObservableObject {
     let model = append(ToastValue(icon: Image(systemName: "circle"), message: message, duration: nil))
     do {
       let value = try await task()
-      model.value = onSuccess(value)
+      withAnimation(.spring) {
+        model.value = onSuccess(value)
+      }
       return value
     } catch {
-      model.value = onFailure(error)
+      withAnimation(.spring) {
+        model.value = onFailure(error)
+      }
       throw error
     }
   }

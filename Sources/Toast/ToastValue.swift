@@ -1,8 +1,6 @@
 import Foundation
 import SwiftUI
 
-import struct SwiftUI.Image
-import struct SwiftUI.Color
 public struct ToastValue {
   internal var icon: AnyView?
   internal var message: String
