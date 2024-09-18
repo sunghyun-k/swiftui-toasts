@@ -11,6 +11,21 @@ internal struct ToastView: View {
       Capsule()
         .fill(Color.toastBackground)
       main
+        .transition(
+          .modifier(
+            active: TransformModifier(
+              yOffset: 0.0,
+              scale: 1.0,
+              opacity: -1.0
+            ),
+            identity: TransformModifier(
+              yOffset: 0.0,
+              scale: 1.0,
+              opacity: 1.0
+            )
+          )
+        )
+        .id(model.message)
     }
     .frame(height: 48)
     .fixedSize(horizontal: true, vertical: false)
@@ -30,21 +45,6 @@ internal struct ToastView: View {
           .frame(width: 14)
       }
       Text(model.message)
-        .transition(
-          .modifier(
-            active: TransformModifier(
-              yOffset: 0.0,
-              scale: 1.0,
-              opacity: -1.0
-            ),
-            identity: TransformModifier(
-              yOffset: 0.0,
-              scale: 1.0,
-              opacity: 1.0
-            )
-          )
-        )
-        .id(model.message)
       if let button = model.button {
         buttonView(button)
           .padding([.top, .bottom, .trailing], 10)
