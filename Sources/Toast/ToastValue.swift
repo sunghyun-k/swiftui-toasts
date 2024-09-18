@@ -5,6 +5,7 @@ public struct ToastValue {
   internal var icon: AnyView?
   internal var message: String
   internal var button: ToastButton?
+  /// If nil, the toast will persist and not disappear. Used when displaying a loading toast.
   internal var duration: TimeInterval?
   public init(
     icon: (any View)? = nil,
