@@ -31,7 +31,7 @@ struct MyApp: App {
   var body: some Scene {
     WindowGroup {
       ContentView()
-        .installToast()
+        .installToast(position: .bottom)
     }
   }
 }
@@ -43,7 +43,7 @@ struct MyApp: App {
 @Environment(\.presentToast) var presentToast
 
 Button("Show Toast") {
-  let toast = ToastModel(
+  let toast = ToastValue(
     icon: Image(systemName: "bell"),
     message: "You have a new notification."
   )
@@ -54,7 +54,7 @@ Button("Show Toast") {
 ## Advanced Usage
 
 ```swift
-let toast = ToastModel(
+presentToast(
   message: "Loading...",
   task: {
     // Handle loading task
@@ -76,7 +76,7 @@ let toast = ToastModel(
 - **Remove icon**
 
 ```swift
-let toast = ToastModel(
+let toast = ToastValue(
   message: "Message only toast."
 )
 ```
@@ -85,7 +85,7 @@ let toast = ToastModel(
 - **Add button**
 
 ```swift
-let toast = ToastModel(
+let toast = ToastValue(
   message: "Toast with action required.",
   button: ToastButton(title: "Confirm", color: .green, action: {
     // Handle button action
