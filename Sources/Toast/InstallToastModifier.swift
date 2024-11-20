@@ -2,13 +2,17 @@ import SwiftUI
 import WindowOverlay
 
 extension View {
-  public func installToast(position: ToastPosition = .bottom) -> some View {
-    self.modifier(InstallToastModifier(position: position))
+  public func installToast(
+    position: ToastPosition = .bottom,
+    order: ToastOrder = .fifo
+  ) -> some View {
+    self.modifier(InstallToastModifier(position: position, order: order))
   }
 }
 
 private struct InstallToastModifier: ViewModifier {
   var position: ToastPosition
+  var order: ToastOrder
   @State private var manager = ToastManager()
   func body(content: Content) -> some View {
     content
@@ -21,6 +25,9 @@ private struct InstallToastModifier: ViewModifier {
       }
       ._onChange(of: position, initial: true) {
         manager.position = $1
+      }
+      ._onChange(of: order, initial: true) {
+        manager.order = $1
       }
   }
 }
