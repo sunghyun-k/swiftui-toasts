@@ -28,11 +28,9 @@ private struct InstallToastModifier: ViewModifier {
 private struct InstallToastView: View {
   @ObservedObject var manager: ToastManager
   var body: some View {
-    if manager.isPresented {
-      Color.clear
-        .windowOverlay(isPresented: true) {
-          ToastRootView(manager: manager)
-        }
-    }
+    Color.clear
+      .windowOverlay(isPresented: manager.isPresented) {
+        ToastRootView(manager: manager)
+      }
   }
 }

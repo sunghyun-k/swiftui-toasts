@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sunghyun-k/swiftui-window-overlay.git",
       "state" : {
-        "revision" : "fb292c878923bd4d2811ab9605992aa10b45b07a",
-        "version" : "1.0.0"
+        "revision" : "af0adae224dfe27e094bdef19a71fa4cc020cfbb",
+        "version" : "1.0.1"
       }
     }
   ],
