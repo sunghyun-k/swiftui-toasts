@@ -4,6 +4,7 @@ import SwiftUI
 internal final class ToastManager: ObservableObject {
 
   @Published internal var position: ToastPosition = .top
+  @Published internal var order: ToastOrder = .fifo
   @Published internal private(set) var models: [ToastModel] = []
   @Published internal private(set) var isAppeared = false
   private var dismissOverlayTask: Task<Void, any Error>?
@@ -43,7 +44,16 @@ internal final class ToastManager: ObservableObject {
     if let duration = model.value.duration {
       do {
         try await Task.sleep(seconds: duration)
-        remove(model)
+        switch order {
+        case .fifo:
+            if let firstModel = models.first {
+                remove(firstModel)
+            }
+        case .lifo:
+            if let lastModel = models.last {
+                remove(lastModel)
+            }
+        }
       } catch {}
     }
   }
