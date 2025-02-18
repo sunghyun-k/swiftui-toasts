@@ -47,11 +47,11 @@ internal final class ToastManager: ObservableObject {
       } catch {}
     }
   }
-
+  
   @discardableResult
   internal func append<V>(
     message: String,
-    task: () async throws -> V,
+    task: AsyncOperation<V>,
     onSuccess: (V) -> ToastValue,
     onFailure: (any Error) -> ToastValue
   ) async throws -> V {
@@ -72,3 +72,9 @@ internal final class ToastManager: ObservableObject {
 }
 
 internal let removalAnimationDuration: Double = 0.3
+
+#if compiler(>=6)
+public typealias AsyncOperation<V> = () async throws -> sending V
+#else
+public typealias AsyncOperation<V> = () async throws -> V
+#endif

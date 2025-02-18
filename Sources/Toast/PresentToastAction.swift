@@ -7,6 +7,9 @@ extension EnvironmentValues {
   }
 }
 
+#if compiler(>=6)
+@MainActor
+#endif
 public struct PresentToastAction {
   internal weak var _manager: ToastManager?
   private var manager: ToastManager {
@@ -20,10 +23,10 @@ public struct PresentToastAction {
   public func callAsFunction(_ toast: ToastValue) {
     manager.append(toast)
   }
-
+  
   public func callAsFunction<V>(
     message: String,
-    task: () async throws -> V,
+    task: AsyncOperation<V>,
     onSuccess: (V) -> ToastValue,
     onFailure: (any Error) -> ToastValue
   ) async throws -> V {

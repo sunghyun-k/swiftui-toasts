@@ -26,3 +26,12 @@ let package = Package(
     ),
   ]
 )
+
+#if compiler(>=6)
+  for target in package.targets where target.type != .test {
+    target.swiftSettings = target.swiftSettings ?? []
+    target.swiftSettings?.append(contentsOf: [
+      .enableExperimentalFeature("StrictConcurrency")
+    ])
+  }
+#endif
