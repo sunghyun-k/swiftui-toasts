@@ -8,16 +8,16 @@ let package = Package(
   products: [
     .library(
       name: "Toasts",
-      targets: ["Toasts"]),
+      targets: ["Toasts"])
   ],
   dependencies: [
-    .package(url: "https://github.com/sunghyun-k/swiftui-window-overlay.git", from: "1.0.1"),
+    .package(url: "https://github.com/sunghyun-k/swiftui-window-overlay.git", from: "1.0.2")
   ],
   targets: [
     .target(
       name: "Toasts",
       dependencies: [
-        .product(name: "WindowOverlay", package: "swiftui-window-overlay"),
+        .product(name: "WindowOverlay", package: "swiftui-window-overlay")
       ]
     ),
     .testTarget(

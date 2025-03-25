@@ -6,6 +6,7 @@ internal final class ToastManager: ObservableObject {
   @Published internal var position: ToastPosition = .top
   @Published internal private(set) var models: [ToastModel] = []
   @Published internal private(set) var isAppeared = false
+  @Published internal var safeAreaInsets: EdgeInsets = .init()
   private var dismissOverlayTask: Task<Void, any Error>?
 
   internal var isPresented: Bool {

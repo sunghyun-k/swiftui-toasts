@@ -6,7 +6,6 @@ A toast notification library for SwiftUI.
 
 ![Simulator Screen Recording - iPhone 16 Pro - 2024-09-18 at 10 53 57](https://github.com/user-attachments/assets/6c5f4906-aab6-4ef6-b9bb-844d7110586b)
 
-
 <img width="341" alt="SCR-20240916-kqog" src="https://github.com/user-attachments/assets/c072c767-8e26-471b-b156-80b204ca433b">
 
 ## Features
@@ -81,7 +80,6 @@ let toast = ToastValue(
 )
 ```
 
-
 - **Add button**
 
 ```swift
@@ -93,6 +91,31 @@ let toast = ToastValue(
 )
 ```
 
+## Custom SafeArea Handling
+
+If you need to manually control the safe area insets for toasts (e.g., in a custom view hierarchy or when using multiple tabs), you can use the `addToastSafeAreaObserver` modifier:
+
+```swift
+struct ContentView: View {
+  var body: some View {
+    TabView {
+      Tab1View()
+      Tab2View()
+    }
+  }
+}
+
+struct Tab1View: View {
+  var body: some View {
+    ScrollView {
+      // Your content here
+    }
+    .addToastSafeAreaObserver()
+  }
+}
+```
+
+This modifier helps the toast system correctly detect and respond to safe area changes, which is particularly useful in complex view hierarchies or when using TabView.
 
 ## Requirements
 
