@@ -40,7 +40,7 @@ internal struct ToastRootView: View {
       .spring(duration: removalAnimationDuration),
       value: Tuple(count: manager.models.count, isAppeared: manager.isAppeared)
     )
-    .padding(.vertical)
+    .padding()
     .padding(manager.safeAreaInsets)
     .animation(.spring(duration: removalAnimationDuration), value: manager.safeAreaInsets)
     .ignoresSafeArea()

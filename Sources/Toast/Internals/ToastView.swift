@@ -7,31 +7,28 @@ internal struct ToastView: View {
   private var isDark: Bool { colorScheme == .dark }
 
   var body: some View {
-    ZStack(alignment: .trailing) {
-      Capsule()
-        .fill(Color.toastBackground)
-      main
-        .transition(
-          .modifier(
-            active: TransformModifier(
-              yOffset: 0.0,
-              scale: 1.0,
-              opacity: -1.0
-            ),
-            identity: TransformModifier(
-              yOffset: 0.0,
-              scale: 1.0,
-              opacity: 1.0
-            )
+    main
+      ._background {
+        Capsule().fill(Color.toastBackground)
+      }
+      .transition(
+        .modifier(
+          active: TransformModifier(
+            yOffset: 0.0,
+            scale: 1.0,
+            opacity: -1.0
+          ),
+          identity: TransformModifier(
+            yOffset: 0.0,
+            scale: 1.0,
+            opacity: 1.0
           )
         )
-        .id(model.message)
-    }
-    .frame(height: 48)
-    .fixedSize(horizontal: true, vertical: false)
-    .compositingGroup()
-    .shadow(color: .primary.opacity(isDark ? 0.0 : 0.1), radius: 16, y: 8.0)
-    .frame(maxWidth: .infinity)
+      )
+      .id(model.message)
+      .frame(height: 48)
+      .compositingGroup()
+      .shadow(color: .primary.opacity(isDark ? 0.0 : 0.1), radius: 16, y: 8.0)
   }
 
   private var main: some View {
@@ -45,6 +42,8 @@ internal struct ToastView: View {
           .frame(width: 14)
       }
       Text(model.message)
+        .lineLimit(1)
+        .truncationMode(.tail)
       if let button = model.button {
         buttonView(button)
           .padding([.top, .bottom, .trailing], 10)
@@ -78,7 +77,8 @@ internal struct ToastView: View {
 #Preview {
   let group = VStack {
     ToastView(
-      model: .init(value:
+      model: .init(
+        value:
           .init(
             icon: Image(systemName: "info.circle"),
             message: "This is a toast message",
@@ -87,7 +87,8 @@ internal struct ToastView: View {
       )
     )
     ToastView(
-      model: .init(value:
+      model: .init(
+        value:
           .init(
             icon: Image(systemName: "info.circle"),
             message: "This is a toast message",
@@ -96,7 +97,8 @@ internal struct ToastView: View {
       )
     )
     ToastView(
-      model: .init(value:
+      model: .init(
+        value:
           .init(
             icon: Image(systemName: "info.circle"),
             message: "This is a toast message",
@@ -105,7 +107,8 @@ internal struct ToastView: View {
       )
     )
     ToastView(
-      model: .init(value:
+      model: .init(
+        value:
           .init(
             icon: nil,
             message: "This is a toast message",
@@ -114,7 +117,8 @@ internal struct ToastView: View {
       )
     )
     ToastView(
-      model: .init(value:
+      model: .init(
+        value:
           .init(
             icon: nil,
             message: "Copied",
