@@ -6,4 +6,6 @@ public enum ToastPosition {
   case top
   /// Toast appears at the bottom of the screen.
   case bottom
+  /// Toast appears at the center of the screen.
+  case center
 }

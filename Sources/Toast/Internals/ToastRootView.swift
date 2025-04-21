@@ -11,17 +11,17 @@ internal struct ToastRootView: View {
 
   @ViewBuilder
   private var main: some View {
-    let isTop = manager.position == .top
+    let isBottom = manager.position == .bottom
     VStack(spacing: 8) {
-      if !isTop { Spacer() }
+        if manager.position != .top { Spacer() }
 
-      let models = isTop ? manager.models.reversed() : manager.models
+      let models = !isBottom ? manager.models.reversed() : manager.models
       ForEach(manager.isAppeared ? models : []) { model in
         ToastInteractingView(model: model, manager: manager)
           .transition(
             .modifier(
               active: TransformModifier(
-                yOffset: isTop ? -96 : 96,
+                yOffset: !isBottom ? -96 : 96,
                 scale: 0.5,
                 opacity: 0.0
               ),
@@ -34,7 +34,7 @@ internal struct ToastRootView: View {
           )
       }
 
-      if isTop { Spacer() }
+      if manager.position != .bottom { Spacer() }
     }
     .animation(
       .spring(duration: removalAnimationDuration),
