@@ -30,6 +30,7 @@ internal struct ToastView: View {
       Text(model.message)
         .lineLimit(1)
         .truncationMode(.tail)
+        ._foregroundColor(model.textColor ?? .primary)
       if let button = model.button {
         buttonView(button)
           .padding([.top, .bottom, .trailing], 10)
@@ -68,6 +69,7 @@ internal struct ToastView: View {
           .init(
             icon: Image(systemName: "info.circle"),
             message: "This is a toast message",
+            backgroundColor: .yellow,
             button: .init(title: "Action", color: .red, action: {})
           )
       )
@@ -98,6 +100,7 @@ internal struct ToastView: View {
           .init(
             icon: nil,
             message: "This is a toast message",
+            textColor: .green,
             button: nil
           )
       )
