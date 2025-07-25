@@ -5,6 +5,7 @@ import SwiftUI
 public struct ToastValue {
   internal var icon: AnyView?
   internal var message: String
+  internal var backgroundColor: Color?
   internal var button: ToastButton?
   /// If nil, the toast will persist and not disappear. Used when displaying a loading toast.
   internal var duration: TimeInterval?
@@ -19,6 +20,7 @@ public struct ToastValue {
   public init(
     icon: (any View)? = nil,
     message: String,
+    backgroundColor: Color? = nil,
     button: ToastButton? = nil,
     duration: TimeInterval = 3.0
   ) {
@@ -31,6 +33,7 @@ public struct ToastValue {
   internal init(
     icon: (any View)? = nil,
     message: String,
+    backgroundColor: Color? = nil,
     button: ToastButton? = nil,
     duration: TimeInterval? = nil
   ) {

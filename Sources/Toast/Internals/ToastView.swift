@@ -9,7 +9,7 @@ internal struct ToastView: View {
   var body: some View {
     main
       ._background {
-        Capsule().fill(Color.toastBackground)
+          Capsule().fill(model.backgroundColor ?? .toastBackground)
       }
       .id(model.message)
       .frame(height: 48)
