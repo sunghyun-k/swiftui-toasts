@@ -5,6 +5,7 @@ import SwiftUI
 public struct ToastValue {
   internal var icon: AnyView?
   internal var message: String
+  internal var fontSize: CGFloat
   internal var textColor: Color?
   internal var backgroundColor: Color?
   internal var button: ToastButton?
@@ -21,6 +22,7 @@ public struct ToastValue {
   public init(
     icon: (any View)? = nil,
     message: String,
+    fontSize: CGFloat = 16,
     textColor: Color? = nil,
     backgroundColor: Color? = nil,
     button: ToastButton? = nil,
@@ -28,6 +30,7 @@ public struct ToastValue {
   ) {
     self.icon = icon.map { AnyView($0) }
     self.message = message
+    self.fontSize = fontSize
     self.textColor = textColor
     self.backgroundColor = backgroundColor
     self.button = button
@@ -37,6 +40,7 @@ public struct ToastValue {
   internal init(
     icon: (any View)? = nil,
     message: String,
+    fontSize: CGFloat = 16,
     textColor: Color? = nil,
     backgroundColor: Color? = nil,
     button: ToastButton? = nil,
@@ -44,6 +48,7 @@ public struct ToastValue {
   ) {
     self.icon = icon.map { AnyView($0) }
     self.message = message
+    self.fontSize = fontSize
     self.backgroundColor = backgroundColor
     self.button = button
     self.duration = duration
