@@ -15,6 +15,13 @@ internal struct ToastView: View {
       .frame(height: 48)
       .compositingGroup()
       .shadow(color: .primary.opacity(isDark ? 0.0 : 0.1), radius: 16, y: 8.0)
+      .modify {
+          if #available(iOS 26.0, *) {
+              $0.glassEffect(.regular, in: .capsule)
+          } else {
+              $0
+          }
+      }
   }
 
   private var main: some View {
