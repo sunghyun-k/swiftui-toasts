@@ -11,22 +11,23 @@ extension EnvironmentValues {
 }
 
 /// Represents an action for presenting toast messages in SwiftUI views.
+@MainActor
 public struct PresentToastAction {
-  internal weak var _manager: ToastManager?
-  private var manager: ToastManager {
-    guard let _manager else {
-      fatalError(
-        "View.installToast must be called on a parent view to use EnvironmentValues.presentToast.")
-    }
-    return _manager
-  }
+  internal weak var manager: ToastManager?
 
   /// Presents a toast with the specified configuration.
   ///
   /// - Parameter toast: The toast configuration to display.
   @MainActor
   public func callAsFunction(_ toast: ToastValue) {
-    manager.append(toast)
+    #if DEBUG
+      if manager == nil {
+        print(
+          "View.installToast must be called on a parent view to use EnvironmentValues.presentToast."
+        )
+      }
+    #endif
+    manager?.append(toast)
   }
 
   /// Presents a loading toast that automatically updates based on the result of an asynchronous task.
@@ -38,18 +39,27 @@ public struct PresentToastAction {
   ///   - onFailure: A closure that returns a toast to display when the task fails.
   /// - Returns: The result of the asynchronous task.
   /// - Throws: Any error thrown by the asynchronous task.
+  @MainActor
+  @discardableResult
   public func callAsFunction<V>(
     message: String,
-    task: () async throws -> V,
+    task: sending () async throws -> sending V,
     onSuccess: (V) -> ToastValue,
     onFailure: (any Error) -> ToastValue
-  ) async throws -> V {
-    try await manager.append(
-      message: message,
-      task: task,
-      onSuccess: onSuccess,
-      onFailure: onFailure
-    )
+  ) async throws -> sending V {
+    if let manager {
+      return try await manager.append(
+        message: message,
+        task: task,
+        onSuccess: onSuccess,
+        onFailure: onFailure
+      )
+    } else {
+      print(
+        "View.installToast must be called on a parent view to use EnvironmentValues.presentToast."
+      )
+      return try await task()
+    }
   }
 }
 

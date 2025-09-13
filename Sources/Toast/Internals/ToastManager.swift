@@ -25,6 +25,7 @@ internal final class ToastManager: ObservableObject {
     dismissOverlayTask = nil
     let model = ToastModel(value: toast)
     models.append(model)
+    announceToAccessibility(toast.message)
     return model
   }
 
@@ -52,21 +53,25 @@ internal final class ToastManager: ObservableObject {
   @discardableResult
   internal func append<V>(
     message: String,
-    task: () async throws -> V,
+    task: sending () async throws -> sending V,
     onSuccess: (V) -> ToastValue,
     onFailure: (any Error) -> ToastValue
-  ) async throws -> V {
+  ) async throws -> sending V {
     let model = append(ToastValue(icon: LoadingView(), message: message, duration: nil))
     do {
       let value = try await task()
-      withAnimation(.spring) {
-        model.value = onSuccess(value)
+      let successToast = onSuccess(value)
+      withAnimation(.spring(duration: 0.3)) {
+        model.value = successToast
       }
+      announceToAccessibility(successToast.message)
       return value
     } catch {
-      withAnimation(.spring) {
-        model.value = onFailure(error)
+      let failureToast = onFailure(error)
+      withAnimation(.spring(duration: 0.3)) {
+        model.value = failureToast
       }
+      announceToAccessibility(failureToast.message)
       throw error
     }
   }

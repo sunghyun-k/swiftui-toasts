@@ -1,5 +1,6 @@
 import SwiftUI
-import Toasts
+
+@testable import Toasts
 
 struct ContentView: View {
   @Environment(\.presentToast) var presentToast
@@ -29,9 +30,53 @@ struct ContentView: View {
           )
           presentToast(toast)
         }
+
+        Button("Show Loading Toast") {
+          Task {
+            try await presentToast(
+              message: "Loading...",
+              task: {
+                await loadSucceess()
+              },
+              onSuccess: { result in
+                ToastValue(icon: Image(systemName: "checkmark.circle"), message: result)
+              },
+              onFailure: { error in
+                ToastValue(
+                  icon: Image(systemName: "xmark.circle"), message: error.localizedDescription)
+              })
+          }
+        }
+
+        Button("Show Loading Toast with Failure") {
+          Task {
+            try await presentToast(
+              message: "Loading...",
+              task: {
+                try await loadFailure()
+              },
+              onSuccess: { result in
+                ToastValue(icon: Image(systemName: "checkmark.circle"), message: result)
+              },
+              onFailure: { error in
+                ToastValue(
+                  icon: Image(systemName: "xmark.circle"), message: error.localizedDescription)
+              })
+          }
+        }
       }
     }
     .addToastSafeAreaObserver()
     .toolbarVisibility(showTab ? .visible : .hidden, for: .tabBar)
+  }
+
+  private func loadSucceess() async -> String {
+    try? await Task.sleep(seconds: 1)
+    return "Success"
+  }
+
+  private func loadFailure() async throws -> String {
+    try await Task.sleep(seconds: 1)
+    throw NSError(domain: "Error", code: 1)
   }
 }

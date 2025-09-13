@@ -8,3 +8,4 @@ DerivedData/
 .netrc
 .swiftpm/
 buildServer.json
+/ToastsExampleApp.swiftpm/.build

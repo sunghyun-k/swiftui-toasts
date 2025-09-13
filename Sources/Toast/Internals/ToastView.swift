@@ -11,7 +11,6 @@ internal struct ToastView: View {
       ._background {
         Capsule().fill(Color.toastBackground)
       }
-      .id(model.message)
       .frame(height: 48)
       .compositingGroup()
       .shadow(color: .primary.opacity(isDark ? 0.0 : 0.1), radius: 16, y: 8.0)
@@ -30,6 +29,13 @@ internal struct ToastView: View {
       Text(model.message)
         .lineLimit(1)
         .truncationMode(.tail)
+        .id(model.message)
+        .transition(.asymmetric(
+            insertion: .opacity
+                .animation(.spring(duration: 0.3).delay(0.3)),
+            removal: .opacity
+                .animation(.spring(duration: 0.3))
+        ))
       if let button = model.button {
         buttonView(button)
           .padding([.top, .bottom, .trailing], 10)

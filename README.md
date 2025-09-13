@@ -16,6 +16,7 @@ A toast notification library for SwiftUI.
 - Dark mode support
 - Slide gesture to dismiss
 - Loading state interface with async/await
+- Full VoiceOver compatibility for inclusive user experience
 
 ## Usage
 
@@ -120,4 +121,5 @@ This modifier helps the toast system correctly detect and respond to safe area c
 ## Requirements
 
 - iOS 14.0+
-- Swift 5.9+
+- Swift 6.1+
+- Xcode 16.4+
