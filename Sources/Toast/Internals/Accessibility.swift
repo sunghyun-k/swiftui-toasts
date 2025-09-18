@@ -1,5 +1,6 @@
 import UIKit
 
+@MainActor
 func announceToAccessibility(_ message: String) {
   guard !message.isEmpty, UIAccessibility.isVoiceOverRunning else { return }
 
