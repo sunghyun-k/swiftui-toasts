@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-  name: "swiftui-toasts",
+  name: "toast-alerts",
   platforms: [.iOS(.v14)],
   products: [
     .library(
