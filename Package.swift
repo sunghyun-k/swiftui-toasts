@@ -17,7 +17,8 @@ let package = Package(
       name: "Toasts",
       dependencies: [
         .product(name: "WindowOverlay", package: "swiftui-window-overlay")
-      ]
+      ],
+      path: "Sources/Toast"
     ),
     .testTarget(
       name: "ToastManagerTests",
