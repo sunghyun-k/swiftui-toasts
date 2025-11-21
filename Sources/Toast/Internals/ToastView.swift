@@ -7,21 +7,18 @@ internal struct ToastView: View {
   private var isDark: Bool { colorScheme == .dark }
 
   var body: some View {
-      if #available(iOS 26.0, *) {
-          main
-              .glassEffect(.regular.interactive(true))
-            .frame(height: 48)
-            .compositingGroup()
-            .shadow(color: .primary.opacity(isDark ? 0.0 : 0.1), radius: 16, y: 8.0)
-      } else {
-          main
-            ._background {
-                Capsule().fill(Color.toastBackground)
-            }
-            .frame(height: 48)
-            .compositingGroup()
-            .shadow(color: .primary.opacity(isDark ? 0.0 : 0.1), radius: 16, y: 8.0)
+    main
+      ._background {
+        if #available(iOS 18.0, *) {
+          // Use glass effect on iOS 18+, no background color needed
+          Capsule()
+        } else {
+          Capsule().fill(Color.toastBackground)
+        }
       }
+      .frame(height: 48)
+      .compositingGroup()
+      .shadow(color: .primary.opacity(isDark ? 0.0 : 0.1), radius: 16, y: 8.0)
   }
 
   private var main: some View {
