@@ -8,15 +8,18 @@ extension View {
   /// notifications in all child views. Child views can then present toasts using the
   /// `presentToast` environment value.
   ///
-  /// - Parameter position: The vertical position where toasts will appear. Default is `.bottom`.
+  /// - Parameters:
+  ///   - position: The vertical position where toasts will appear. Default is `.bottom`.
+  ///   - haptics: Whether to enable haptic feedback for toasts. Default is `false`.
   /// - Returns: A view with toast presentation capability.
-  public func installToast(position: ToastPosition = .bottom) -> some View {
-    self.modifier(InstallToastModifier(position: position))
+  public func installToast(position: ToastPosition = .bottom, haptics: Bool = false) -> some View {
+    self.modifier(InstallToastModifier(position: position, haptics: haptics))
   }
 }
 
 private struct InstallToastModifier: ViewModifier {
   var position: ToastPosition
+  var haptics: Bool
   @State private var manager = ToastManager()
   func body(content: Content) -> some View {
     content
@@ -29,6 +32,9 @@ private struct InstallToastModifier: ViewModifier {
       }
       ._onChange(of: position, initial: true) {
         manager.position = $1
+      }
+      ._onChange(of: haptics, initial: true) {
+        manager.haptics = $1
       }
       .addToastSafeAreaObserver()
       .onPreferenceChange(SafeAreaInsetsPreferenceKey.self) {

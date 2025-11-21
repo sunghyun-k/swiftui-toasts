@@ -46,7 +46,7 @@ public struct PresentToastAction {
     task: sending () async throws -> sending V,
     onSuccess: (V) -> ToastValue,
     onFailure: (any Error) -> ToastValue
-  ) async throws -> sending V {
+  ) async throws -> V {
     if let manager {
       return try await manager.append(
         message: message,

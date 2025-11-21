@@ -26,7 +26,35 @@ struct ContentView: View {
         Button("Show Toast") {
           let toast = ToastValue(
             icon: Image(systemName: "bell"),
-            message: "typed message: \(message)"
+            message: "typed message: \(message)",
+            haptic: .info
+          )
+          presentToast(toast)
+        }
+
+        Button("Show Success Toast") {
+          let toast = ToastValue(
+            icon: Image(systemName: "checkmark.circle"),
+            message: "Success!",
+            haptic: .success
+          )
+          presentToast(toast)
+        }
+
+        Button("Show Error Toast") {
+          let toast = ToastValue(
+            icon: Image(systemName: "xmark.circle"),
+            message: "Error occurred",
+            haptic: .error
+          )
+          presentToast(toast)
+        }
+
+        Button("Show Warning Toast") {
+          let toast = ToastValue(
+            icon: Image(systemName: "exclamationmark.triangle"),
+            message: "Warning!",
+            haptic: .warning
           )
           presentToast(toast)
         }
@@ -39,11 +67,11 @@ struct ContentView: View {
                 await loadSucceess()
               },
               onSuccess: { result in
-                ToastValue(icon: Image(systemName: "checkmark.circle"), message: result)
+                ToastValue(icon: Image(systemName: "checkmark.circle"), message: result, haptic: .success)
               },
               onFailure: { error in
                 ToastValue(
-                  icon: Image(systemName: "xmark.circle"), message: error.localizedDescription)
+                  icon: Image(systemName: "xmark.circle"), message: error.localizedDescription, haptic: .error)
               })
           }
         }
@@ -56,11 +84,11 @@ struct ContentView: View {
                 try await loadFailure()
               },
               onSuccess: { result in
-                ToastValue(icon: Image(systemName: "checkmark.circle"), message: result)
+                ToastValue(icon: Image(systemName: "checkmark.circle"), message: result, haptic: .success)
               },
               onFailure: { error in
                 ToastValue(
-                  icon: Image(systemName: "xmark.circle"), message: error.localizedDescription)
+                  icon: Image(systemName: "xmark.circle"), message: error.localizedDescription, haptic: .error)
               })
           }
         }

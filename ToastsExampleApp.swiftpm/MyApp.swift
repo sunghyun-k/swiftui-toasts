@@ -5,7 +5,7 @@ struct MyApp: App {
   var body: some Scene {
     WindowGroup {
       ContentView()
-        .installToast(position: .bottom)
+        .installToast(position: .bottom, haptics: true)
     }
   }
 }
