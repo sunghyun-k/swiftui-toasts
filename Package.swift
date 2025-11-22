@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
   name: "toast-alerts",
-  platforms: [.iOS(.v14), .macOS(.v11)],
+  platforms: [.iOS(.v14)],
   products: [
     .library(
       name: "Toasts",

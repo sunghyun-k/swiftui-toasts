@@ -7,18 +7,37 @@ internal struct ToastView: View {
   private var isDark: Bool { colorScheme == .dark }
 
   var body: some View {
-    main
-      ._background {
-        if #available(iOS 18.0, *) {
-          // Use glass effect on iOS 18+, no background color needed
+    if #available(iOS 18.0, *) {
+      // iOS 18+ — let the system draw Liquid Glass
+      main
+        .padding(.horizontal, 12)
+        .background(
+            Capsule()
+                .fill(.thinMaterial)
+        )
+        .frame(height: 48)
+        .compositingGroup()
+        .shadow(
+          color: .primary.opacity(isDark ? 0.0 : 0.1),
+          radius: 16,
+          y: 8
+        )
+    } else {
+      // Older iOS — your old capsule background
+      main
+        .padding(.horizontal, 12)
+        .background(
           Capsule()
-        } else {
-          Capsule().fill(Color.toastBackground)
-        }
-      }
-      .frame(height: 48)
-      .compositingGroup()
-      .shadow(color: .primary.opacity(isDark ? 0.0 : 0.1), radius: 16, y: 8.0)
+            .fill(Color.toastBackground)
+        )
+        .frame(height: 48)
+        .compositingGroup()
+        .shadow(
+          color: .primary.opacity(isDark ? 0.0 : 0.1),
+          radius: 16,
+          y: 8
+        )
+    }
   }
 
   private var main: some View {
