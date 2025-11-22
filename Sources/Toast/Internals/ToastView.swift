@@ -7,14 +7,10 @@ internal struct ToastView: View {
   private var isDark: Bool { colorScheme == .dark }
 
   var body: some View {
-    if #available(iOS 18.0, *) {
-      // iOS 18+ — let the system draw Liquid Glass
+    if #available(iOS 26.0, *) {
+      // iOS 26+ — let the system draw Liquid Glass
       main
-        .padding(.horizontal, 12)
-        .background(
-            Capsule()
-                .fill(.thinMaterial)
-        )
+        .glassEffect(.regular.interactive(true))
         .frame(height: 48)
         .compositingGroup()
         .shadow(
