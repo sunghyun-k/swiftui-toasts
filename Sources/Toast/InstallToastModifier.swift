@@ -1,5 +1,4 @@
 import SwiftUI
-import WindowOverlay
 
 extension View {
   /// Installs the toast presentation system on this view.

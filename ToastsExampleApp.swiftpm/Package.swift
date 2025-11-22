@@ -35,13 +35,13 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(name: "swiftui-toasts", path: "..")
+        .package(name: "toast-alerts", path: "..")
     ],
     targets: [
         .executableTarget(
             name: "AppModule",
             dependencies: [
-                .product(name: "Toasts", package: "swiftui-toasts")
+                .product(name: "Toasts", package: "toast-alerts")
             ],
             path: "."
         )
