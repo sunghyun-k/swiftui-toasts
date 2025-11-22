@@ -40,6 +40,9 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "AppModule",
+            dependencies: [
+                .product(name: "Toasts", package: "toast-alerts")
+            ],
             path: "."
         )
     ],
