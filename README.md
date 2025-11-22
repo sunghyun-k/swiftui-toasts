@@ -17,6 +17,7 @@ A toast notification library for SwiftUI.
 - Slide gesture to dismiss
 - Loading state interface with async/await
 - Full VoiceOver compatibility for inclusive user experience
+- **Experimental:** iOS 26+ Liquid Glass support
 
 ## Usage
 
@@ -44,7 +45,7 @@ struct MyApp: App {
 
 Button("Show Toast") {
   let toast = ToastValue(
-    icon: Image(systemName: "bell"),
+    systemImage: "bell",
     message: "You have a new notification."
   )
   presentToast(toast)
@@ -53,18 +54,23 @@ Button("Show Toast") {
 
 ## Advanced Usage
 
+### Async Tasks
+
+Display a loading toast while an asynchronous task runs, then automatically update it to success or failure state. The API is fully compatible with Swift 6 concurrency and MainActor.
+
 ```swift
-presentToast(
+await presentToast(
   message: "Loading...",
   task: {
-    // Handle loading task
+    // Perform async work here
+    try await Task.sleep(for: .seconds(2))
     return "Success"
   },
   onSuccess: { result in
-    ToastValue(icon: Image(systemName: "checkmark.circle"), message: result)
+    ToastValue(systemImage: "checkmark.circle", message: result)
   },
   onFailure: { error in
-    ToastValue(icon: Image(systemName: "xmark.circle"), message: error.localizedDescription)
+    ToastValue(systemImage: "xmark.circle", message: error.localizedDescription)
   }
 )
 ```
