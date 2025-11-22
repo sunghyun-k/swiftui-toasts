@@ -1,3 +1,4 @@
+#if os(iOS)
 import UIKit
 import SwiftUI
 
@@ -24,4 +25,4 @@ extension UIColor {
     return self.cgColor.alpha
   }
 }
-
+#endif

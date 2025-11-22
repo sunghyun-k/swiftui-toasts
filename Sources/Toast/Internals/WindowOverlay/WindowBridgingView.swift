@@ -1,3 +1,4 @@
+#if os(iOS)
 import SwiftUI
 import UIKit
 
@@ -101,4 +102,4 @@ extension UIHostingController {
     }
   }
 }
-
+#endif

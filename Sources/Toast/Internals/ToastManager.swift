@@ -63,7 +63,7 @@ internal final class ToastManager: ObservableObject {
   @discardableResult
   internal func append<V>(
     message: String,
-    task: sending () async throws -> sending V,
+    task: () async throws -> V,
     onSuccess: (V) -> ToastValue,
     onFailure: (any Error) -> ToastValue
   ) async throws -> V {

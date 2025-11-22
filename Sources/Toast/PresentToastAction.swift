@@ -43,7 +43,7 @@ public struct PresentToastAction {
   @discardableResult
   public func callAsFunction<V>(
     message: String,
-    task: sending () async throws -> sending V,
+    task: () async throws -> V,
     onSuccess: (V) -> ToastValue,
     onFailure: (any Error) -> ToastValue
   ) async throws -> V {

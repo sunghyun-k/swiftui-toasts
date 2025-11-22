@@ -1,3 +1,4 @@
+#if os(iOS)
 import UIKit
 
 internal final class WindowOverlayWindow: UIWindow {
@@ -21,4 +22,4 @@ internal final class WindowOverlayWindow: UIWindow {
     return view
   }
 }
-
+#endif
