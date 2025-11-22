@@ -41,6 +41,7 @@ internal struct ToastView: View {
       if let icon = model.icon {
         icon
           .frame(width: 19, height: 19)
+          ._foregroundColor(.primary)
           .padding(.leading, 15)
       } else {
         Color.clear
