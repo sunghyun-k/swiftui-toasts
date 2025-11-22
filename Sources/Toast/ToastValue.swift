@@ -81,6 +81,30 @@ public struct ToastValue {
     )
   }
 
+  /// Convenience initializer that uses a named image asset for the icon.
+  ///
+  /// - Parameters:
+  ///   - image: The name of the image asset to use as an icon.
+  ///   - message: The text content of the toast.
+  ///   - button: An optional action button to display in the toast.
+  ///   - duration: How long the toast should be displayed before automatically dismissing, in seconds. Clamped between 0 and 10 seconds. Default is 3.0.
+  ///   - haptic: The haptic feedback type for this toast. Default is `.info`.
+  public init(
+    image: String,
+    message: String,
+    button: ToastButton? = nil,
+    duration: TimeInterval = 3.0,
+    haptic: ToastHaptic? = .info
+  ) {
+    self.init(
+      icon: Image(image),
+      message: message,
+      button: button,
+      duration: duration,
+      haptic: haptic
+    )
+  }
+
   @_disfavoredOverload
   internal init(
     icon: (any View)? = nil,
