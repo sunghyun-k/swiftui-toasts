@@ -7,13 +7,33 @@ internal struct ToastView: View {
   private var isDark: Bool { colorScheme == .dark }
 
   var body: some View {
-    main
-      ._background {
-        Capsule().fill(Color.toastBackground)
-      }
-      .frame(height: 48)
-      .compositingGroup()
-      .shadow(color: .primary.opacity(isDark ? 0.0 : 0.1), radius: 16, y: 8.0)
+    if #available(iOS 26.0, *) {
+      // iOS 26+ — let the system draw Liquid Glass
+      main
+        .glassEffect(.regular.interactive(true))
+        .frame(height: 48)
+        .compositingGroup()
+        .shadow(
+          color: .primary.opacity(isDark ? 0.0 : 0.1),
+          radius: 16,
+          y: 8
+        )
+    } else {
+      // Older iOS — your old capsule background
+      main
+        .padding(.horizontal, 12)
+        .background(
+          Capsule()
+            .fill(Color.toastBackground)
+        )
+        .frame(height: 48)
+        .compositingGroup()
+        .shadow(
+          color: .primary.opacity(isDark ? 0.0 : 0.1),
+          radius: 16,
+          y: 8
+        )
+    }
   }
 
   private var main: some View {
@@ -21,6 +41,7 @@ internal struct ToastView: View {
       if let icon = model.icon {
         icon
           .frame(width: 19, height: 19)
+          ._foregroundColor(.primary)
           .padding(.leading, 15)
       } else {
         Color.clear
