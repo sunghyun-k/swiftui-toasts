@@ -11,7 +11,7 @@ internal struct ToastView: View {
       ._background {
         Capsule().fill(Color.toastBackground)
       }
-      .frame(height: 48)
+      .frame(minHeight: 48)
       .compositingGroup()
       .shadow(color: .primary.opacity(isDark ? 0.0 : 0.1), radius: 16, y: 8.0)
   }
@@ -27,9 +27,8 @@ internal struct ToastView: View {
           .frame(width: 14)
       }
       Text(model.message)
-        .lineLimit(1)
-        .truncationMode(.tail)
         .id(model.message)
+        .padding(.vertical, 12)
         .transition(.asymmetric(
             insertion: .opacity
                 .animation(.spring(duration: 0.3).delay(0.3)),
@@ -93,7 +92,7 @@ internal struct ToastView: View {
         value:
           .init(
             icon: Image(systemName: "info.circle"),
-            message: "This is a toast message",
+            message: "A powerful notification system for SwiftUI with toasts, progress overlays, and dialogs - built with modern Swift concurrency and environment-based API.",
             button: nil
           )
       )
@@ -119,7 +118,7 @@ internal struct ToastView: View {
       )
     )
   }
-  return VStack {
+  return ScrollView {
     group
     group
       .padding(20)
