@@ -12,6 +12,7 @@ internal struct ToastView: View {
         Capsule().fill(Color.toastBackground)
       }
       .frame(minHeight: 48)
+      .fixedSize(horizontal: false, vertical: true)
       .compositingGroup()
       .shadow(color: .primary.opacity(isDark ? 0.0 : 0.1), radius: 16, y: 8.0)
   }
