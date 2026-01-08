@@ -9,7 +9,8 @@ internal struct ToastView: View {
   var body: some View {
     main
       ._background {
-        Capsule().fill(Color.toastBackground)
+          RoundedRectangle(cornerRadius: 24, style: .continuous)
+          .fill(Color.toastBackground)
       }
       .frame(minHeight: 48)
       .fixedSize(horizontal: false, vertical: true)
