@@ -75,6 +75,45 @@ internal final class ToastManager: ObservableObject {
       throw error
     }
   }
+
+  @discardableResult
+  internal func append<V>(
+    message: String,
+    task: @MainActor (ToastProgress) async throws -> V,
+    onSuccess: (V) -> ToastValue,
+    onFailure: (any Error) -> ToastValue
+  ) async throws -> V {
+    let model = append(ToastValue(icon: LoadingView(), message: message, duration: nil))
+    let progress = ToastProgress { [weak self, weak model] message in
+      guard let self, let model else { return }
+      self.update(model, message: message)
+    }
+    do {
+      let value = try await task(progress)
+      let successToast = onSuccess(value)
+      withAnimation(.spring(duration: 0.3)) {
+        model.value = successToast
+      }
+      announceToAccessibility(successToast.message)
+      return value
+    } catch {
+      let failureToast = onFailure(error)
+      withAnimation(.spring(duration: 0.3)) {
+        model.value = failureToast
+      }
+      announceToAccessibility(failureToast.message)
+      throw error
+    }
+  }
+
+  private func update(_ model: ToastModel, message: String) {
+    guard !message.isEmpty, model.message != message else { return }
+
+    withAnimation(.spring(response: 0.32, dampingFraction: 0.82)) {
+      model.message = message
+    }
+    announceToAccessibility(message)
+  }
 }
 
 internal let removalAnimationDuration: Double = 0.3

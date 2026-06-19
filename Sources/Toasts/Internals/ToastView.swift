@@ -3,6 +3,7 @@ import WindowOverlay
 
 internal struct ToastView: View {
   @ObservedObject var model: ToastModel
+  @Environment(\.accessibilityReduceMotion) private var reduceMotion
   @Environment(\.colorScheme) private var colorScheme
 
   private var isDark: Bool { colorScheme == .dark }
@@ -42,16 +43,7 @@ internal struct ToastView: View {
         Color.clear
           .frame(width: 14)
       }
-      Text(model.message)
-        .lineLimit(1)
-        .truncationMode(.tail)
-        .id(model.message)
-        .transition(.asymmetric(
-            insertion: .opacity
-                .animation(.spring(duration: 0.3).delay(0.3)),
-            removal: .opacity
-                .animation(.spring(duration: 0.3))
-        ))
+      messageView
       if let button = model.button {
         buttonView(button)
           .padding([.top, .bottom, .trailing], 10)
@@ -61,6 +53,30 @@ internal struct ToastView: View {
       }
     }
     .font(.system(size: 16, weight: .medium))
+  }
+
+  private var messageView: some View {
+    ZStack(alignment: .leading) {
+      Text(model.message)
+        .lineLimit(1)
+        .truncationMode(.tail)
+        .id(model.message)
+        .transition(messageTransition)
+    }
+    .frame(height: 22, alignment: .leading)
+    .clipped()
+    .animation(.spring(response: 0.32, dampingFraction: 0.82), value: model.message)
+  }
+
+  private var messageTransition: AnyTransition {
+    if reduceMotion {
+      return .opacity
+    }
+
+    return .asymmetric(
+      insertion: .move(edge: .bottom).combined(with: .opacity),
+      removal: .move(edge: .top).combined(with: .opacity)
+    )
   }
 
   @ViewBuilder
