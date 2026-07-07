@@ -1,13 +1,13 @@
 {
-  "originHash" : "a568bae995e7faab42d607ee74419e85caf816d602ed85d3bfad28987a13541e",
+  "originHash" : "fa3fc061a4231f4aae9d260a441fff8cf07ca7bffbb2f68d5d5044ed84417414",
   "pins" : [
     {
       "identity" : "swiftui-window-overlay",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Rabithua/swiftui-window-overlay.git",
       "state" : {
-        "branch" : "codex/liquid-glass-toasts",
-        "revision" : "b16124e00bca69da51ea5196d2dea55420dd2e8e"
+        "revision" : "b16124e00bca69da51ea5196d2dea55420dd2e8e",
+        "version" : "1.1.0"
       }
     }
   ],

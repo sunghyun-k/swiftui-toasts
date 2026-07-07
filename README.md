@@ -18,6 +18,16 @@ A toast notification library for SwiftUI.
 - Loading state interface with async/await
 - Full VoiceOver compatibility for inclusive user experience
 
+## Installation
+
+Add the package in Xcode with this repository URL:
+
+```text
+https://github.com/Rabithua/swiftui-toasts.git
+```
+
+Select the `Toasts` product and use version `1.2.0` or newer.
+
 ## Usage
 
 1. Install toast in your root view:
