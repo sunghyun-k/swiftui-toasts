@@ -1,5 +1,8 @@
 # Toasts
 
+> [!NOTE]
+> This repository is no longer maintained. Toasts now live in [SkimUI](https://github.com/sunghyun-k/skim-ui-ios) — use `.installToasts()` + `presentToast` there.
+
 A toast notification library for SwiftUI.
 
 ![Simulator Screen Recording - iPhone 15 Pro - 2024-09-16 at 11 53 37](https://github.com/user-attachments/assets/7b11b2f1-ed6e-4955-a674-c3bfd49ab8ad)
