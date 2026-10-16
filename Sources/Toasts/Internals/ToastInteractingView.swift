@@ -32,7 +32,7 @@ internal struct ToastInteractingView: View {
 
   @MainActor
   private var dragGesture: some Gesture {
-    DragGesture(minimumDistance: 0)
+    DragGesture(minimumDistance: 12)
       .updating($yOffset) { value, state, _ in
         let translation = value.translation.height
         if model.duration == nil {

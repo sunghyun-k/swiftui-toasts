@@ -1,5 +1,19 @@
 import SwiftUI
 
+/// A progress reporter for updating an in-flight loading toast.
+@MainActor
+public struct ToastProgress {
+  private let updateHandler: @MainActor (String) -> Void
+
+  internal init(updateHandler: @escaping @MainActor (String) -> Void) {
+    self.updateHandler = updateHandler
+  }
+
+  public func update(_ message: String) {
+    updateHandler(message)
+  }
+}
+
 extension EnvironmentValues {
   /// Provides access to the toast presentation action within the environment.
   ///
@@ -59,6 +73,38 @@ public struct PresentToastAction {
         "View.installToast must be called on a parent view to use EnvironmentValues.presentToast."
       )
       return try await task()
+    }
+  }
+
+  /// Presents a loading toast that can update its message while the task is in progress.
+  ///
+  /// - Parameters:
+  ///   - message: The initial loading message to display.
+  ///   - task: The asynchronous task to execute. Use the provided ``ToastProgress`` to update the toast message.
+  ///   - onSuccess: A closure that returns a toast to display when the task succeeds.
+  ///   - onFailure: A closure that returns a toast to display when the task fails.
+  /// - Returns: The result of the asynchronous task.
+  /// - Throws: Any error thrown by the asynchronous task.
+  @MainActor
+  @discardableResult
+  public func callAsFunction<V>(
+    message: String,
+    task: @MainActor (ToastProgress) async throws -> V,
+    onSuccess: (V) -> ToastValue,
+    onFailure: (any Error) -> ToastValue
+  ) async throws -> V {
+    if let manager {
+      return try await manager.append(
+        message: message,
+        task: task,
+        onSuccess: onSuccess,
+        onFailure: onFailure
+      )
+    } else {
+      print(
+        "View.installToast must be called on a parent view to use EnvironmentValues.presentToast."
+      )
+      return try await task(ToastProgress { _ in })
     }
   }
 }

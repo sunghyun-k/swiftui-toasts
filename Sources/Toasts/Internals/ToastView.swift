@@ -1,19 +1,36 @@
 import SwiftUI
+import WindowOverlay
 
 internal struct ToastView: View {
   @ObservedObject var model: ToastModel
+  @Environment(\.accessibilityReduceMotion) private var reduceMotion
   @Environment(\.colorScheme) private var colorScheme
 
   private var isDark: Bool { colorScheme == .dark }
 
   var body: some View {
-    main
-      ._background {
-        Capsule().fill(Color.toastBackground)
-      }
-      .frame(height: 48)
-      .compositingGroup()
-      .shadow(color: .primary.opacity(isDark ? 0.0 : 0.1), radius: 16, y: 8.0)
+    if #available(iOS 26.0, *) {
+      main
+        .frame(height: 48)
+        .background {
+          ZStack {
+            WindowOverlayHitTestArea()
+            Capsule().fill(Color.white.opacity(isDark ? 0.08 : 0.12))
+          }
+        }
+        .glassEffect(.regular.interactive(), in: Capsule())
+        .contentShape(Capsule())
+        .compositingGroup()
+        .shadow(color: .primary.opacity(isDark ? 0.0 : 0.08), radius: 14, y: 6.0)
+    } else {
+      main
+        ._background {
+          Capsule().fill(Color.toastBackground)
+        }
+        .frame(height: 48)
+        .compositingGroup()
+        .shadow(color: .primary.opacity(isDark ? 0.0 : 0.1), radius: 16, y: 8.0)
+    }
   }
 
   private var main: some View {
@@ -26,16 +43,7 @@ internal struct ToastView: View {
         Color.clear
           .frame(width: 14)
       }
-      Text(model.message)
-        .lineLimit(1)
-        .truncationMode(.tail)
-        .id(model.message)
-        .transition(.asymmetric(
-            insertion: .opacity
-                .animation(.spring(duration: 0.3).delay(0.3)),
-            removal: .opacity
-                .animation(.spring(duration: 0.3))
-        ))
+      messageView
       if let button = model.button {
         buttonView(button)
           .padding([.top, .bottom, .trailing], 10)
@@ -47,21 +55,68 @@ internal struct ToastView: View {
     .font(.system(size: 16, weight: .medium))
   }
 
+  private var messageView: some View {
+    ZStack(alignment: .leading) {
+      Text(model.message)
+        .lineLimit(1)
+        .truncationMode(.tail)
+        .id(model.message)
+        .transition(messageTransition)
+    }
+    .frame(height: 22, alignment: .leading)
+    .clipped()
+    .animation(.spring(response: 0.32, dampingFraction: 0.82), value: model.message)
+  }
+
+  private var messageTransition: AnyTransition {
+    if reduceMotion {
+      return .opacity
+    }
+
+    return .asymmetric(
+      insertion: .move(edge: .bottom).combined(with: .opacity),
+      removal: .move(edge: .top).combined(with: .opacity)
+    )
+  }
+
+  @ViewBuilder
   private func buttonView(_ button: ToastButton) -> some View {
-    Button {
-      button.action()
-    } label: {
-      ZStack {
-        Capsule()
-          .fill(button.color.opacity(isDark ? 0.15 : 0.07))
+    if #available(iOS 26.0, *) {
+      Button {
+        button.action()
+      } label: {
         Text(button.title)
+          .font(.system(size: 14, weight: .semibold))
           ._foregroundColor(button.color)
           .padding(.horizontal, 9)
+          .frame(minWidth: 64, minHeight: 28)
+          .fixedSize(horizontal: true, vertical: false)
       }
-      .frame(minWidth: 64)
-      .fixedSize(horizontal: true, vertical: false)
+      .buttonStyle(.plain)
+      .background {
+        Capsule().fill(Color.white.opacity(isDark ? 0.08 : 0.12))
+      }
+      .glassEffect(
+        .regular.tint(button.color.opacity(isDark ? 0.18 : 0.10)).interactive(),
+        in: Capsule()
+      )
+      .contentShape(Capsule())
+    } else {
+      Button {
+        button.action()
+      } label: {
+        ZStack {
+          Capsule()
+            .fill(button.color.opacity(isDark ? 0.15 : 0.07))
+          Text(button.title)
+            ._foregroundColor(button.color)
+            .padding(.horizontal, 9)
+        }
+        .frame(minWidth: 64)
+        .fixedSize(horizontal: true, vertical: false)
+      }
+      .buttonStyle(.plain)
     }
-    .buttonStyle(.plain)
   }
 }
 

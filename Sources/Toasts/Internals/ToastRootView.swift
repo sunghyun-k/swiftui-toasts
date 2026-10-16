@@ -12,6 +12,16 @@ internal struct ToastRootView: View {
   @ViewBuilder
   private var main: some View {
     let isTop = manager.position == .top
+    if #available(iOS 26.0, *) {
+      GlassEffectContainer(spacing: 8) {
+        toastStack(isTop: isTop)
+      }
+    } else {
+      toastStack(isTop: isTop)
+    }
+  }
+
+  private func toastStack(isTop: Bool) -> some View {
     VStack(spacing: 8) {
       if !isTop { Spacer() }
 
